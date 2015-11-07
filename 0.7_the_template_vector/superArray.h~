@@ -1,0 +1,217 @@
+#include <iostream>
+#include <cstring>
+#include <stdexcept> 
+#include <algorithm> 
+#include <initializer_list>
+#ifndef SUPERARRAY
+#define SUPERARRAY
+
+template <class T> 
+class superArray {
+	
+	private:
+		int _totSize;
+		int _nActiveE;
+		const static int init_size = 128; //init size
+		const static int size_incr_fct = 2;   //Multi inc size
+		T *_dataArray;
+	
+	public:
+		superArray();
+		~superArray();
+		superArray(const superArray &);
+		superArray(superArray &&) noexcept;
+		superArray<T>& operator=(superArrray<T> && sA)
+		superArray<T>& operator=(superArrat<T> const& sA){
+
+		superArray(std::initializer_list<T> );
+		//superArray(int s);
+		
+		const T operator[](const int i) const;
+		T & operator[](const int i) ;
+		std::size_t size()const;
+		void push_back(T element);
+		void insert(std::size_t, T);
+		void sort(bool);
+		void erase(const int);
+		void clear();
+		std::size_t capacity();
+		
+		
+};
+//Default
+template <class T> 
+superArray<T>::superArray()
+	: _totSize(init_size)
+	, _nActiveE(0)
+	, _dataArray(new T [init_size])
+{
+	//_nActiveE=0;
+	//_totSize = init_size;
+	//_nActiveE = 0;
+	std::cout<<"default constructor"<<"\n";
+	//_dataArray = new T [init_size];
+}
+//Destroy
+template <class T> superArray<T>::~superArray(){
+	if(_dataArray){
+		delete[] _dataArray;
+		_dataArray = NULL;}
+}
+//Copy
+template <class T> superArray<T>::superArray(const superArray &ar){
+	_totSize = ar._totSize;
+	_nActiveE = ar._nActiveE;
+	_dataArray = new T [_totSize];
+	memcpy(_dataArray,ar._dataArray,sizeof(T)*_totSize);
+}
+//Move
+template <class T>
+superArray<T>::superArray(superArray &&sA) noexcept
+	: _dataArray(sA._dataArray)
+	, _totSize(sA._totSize)
+	, _nActiveE(sA._nActiveE)
+{
+	std::cout<<"MOVING STUFF\n";
+	sA._dataArray = nullptr;	
+}
+//Move assignment
+template <class T>
+superArray<T>& superArray<T>::operator=(superArrray<T> && sA){
+	if(this==&sA) return *this;
+
+	return *this;
+}
+
+//Assignment 
+template<class T>
+superArray<T>& superArray<T>::operator=(superArrat<T> const& sA){
+	if(this==&src) return *this;
+
+
+	return *this;
+}
+
+
+//Initlist
+template <class T>
+superArray<T>::superArray(std::initializer_list<T> bigData){
+	_totSize = bigData.size();
+	_nActiveE = bigData.size();
+	_dataArray = new T [_totSize];
+	std::memcpy(_dataArray,bigData.begin(),sizeof(T)*_totSize);
+	std::cout <<"std init list \n";
+	}
+
+
+
+//get size()
+template <class T> 
+std::size_t superArray<T>::size() const {
+	return (std::size_t) _nActiveE;
+}
+
+//bracket
+template <class T> 
+const T superArray<T>::operator[](const int i) const{
+	std::cout <<"CONST GET VALUE of ELT\n";
+	if(i<0 || i >= _nActiveE){
+		throw std::out_of_range("index not in range");}
+	const T value = _dataArray[i];
+	return value;
+}
+		
+template <class T> 		
+T & superArray<T>::operator[](const int i) { 
+	std::cout <<"DOING THE [] OPERATOR \n";
+
+	if(i<0 || i >= _nActiveE){
+		throw std::out_of_range("index not in range");}
+	return _dataArray[i];
+}
+
+
+
+//pushback
+template <class T>
+void superArray<T>::push_back(T element){
+	std::cout << "pushbackar \n";
+	_nActiveE++;
+	if (_nActiveE > _totSize){
+		_totSize *= size_incr_fct;
+		
+		T * tempArray = new T [_totSize];
+		memcpy(tempArray,_dataArray,sizeof(T)*_nActiveE);
+		delete[] _dataArray;
+		_dataArray = tempArray;
+		tempArray = nullptr;
+		}
+	_dataArray[_nActiveE-1] = element;
+		
+}
+//INSERT
+template <class T>
+void superArray<T>::insert(std::size_t i,T element){
+	std::cout << "Insert \n";
+	_nActiveE++;
+	if(_nActiveE > _totSize){
+		_totSize *= size_incr_fct;
+	}///DASDHLAHSDALKSDHKALJSDHLJDH
+	T * tempArray = new T [_totSize];
+	if (i>0){
+		memcpy(tempArray,_dataArray,sizeof(T)*i);
+	}
+	tempArray[i] = element;
+	memcpy(tempArray+i+1,_dataArray+i,sizeof(T)*(_nActiveE-1-i));
+	delete[] _dataArray;
+	_dataArray = tempArray;
+	tempArray = nullptr;
+}
+
+//sort
+bool myAscScrit (int i,int j) { return (i<j); }
+bool myDesScrit (int i,int j) { return (i>j); }
+
+template <class T>
+void superArray<T>::sort(bool ascending){
+	//Från och med TILL//
+	std::cout << "Sorting\n";
+	if (ascending){
+		std::sort(_dataArray,_dataArray+_nActiveE,myAscScrit);
+	}
+	else{
+		std::sort(_dataArray,_dataArray+_nActiveE,myDesScrit);
+	}
+}
+
+//erase
+template <class T>
+void superArray<T>::erase(const int i){
+	if(i<0 || i >= _nActiveE){
+		throw std::out_of_range("index not in range");}
+	_nActiveE--;
+	//tittar ifall det är sista elementet
+	if(i == _nActiveE){ 
+		_dataArray[_nActiveE] = 0;
+	}
+	else{
+		for(int start = i;start<_nActiveE;start++){
+			_dataArray[start] = _dataArray[start+1];
+		}
+	
+	}
+}
+
+//clear
+template <class T>
+void superArray<T>::clear(){
+	_nActiveE = 0;
+}
+//capacity
+template <class T>
+std::size_t superArray<T>::capacity(){
+	return (std::size_t) _totSize;
+}
+
+
+#endif

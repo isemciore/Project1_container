@@ -1,0 +1,44 @@
+#include <iostream>
+#include <stdexcept>
+#include "UIntVector.h"     // inkludera din headerfil här
+
+int main()
+{
+    // Några saker som ska fungera:
+    
+    UIntVector a(7);           // initiering med 7 element
+    a[3] = 9;
+    UIntVector b(a);           // kopieringskonstruktor 
+    UIntVector c = a;          // kopieringskonstruktor 
+	std::cout<<"Assignment \n"
+	a = b;                 // tilldelning genom kopiering
+    a[5] = 7;              // tilldelning till element
+    
+    const UIntVector e(10);    // konstant objekt med 10 element
+
+	
+    int i = e[5];          // const int oper[](int) const körs
+    i = a[0];              // vektorn är nollindexerad
+    i = a[5];              // int oper[](int) körs
+    
+    a[5]++;                // öka värdet till 8
+	
+    try {
+        i = e[10];             // försöker hämta element som ligger utanför e
+    } catch (std::out_of_range e) {
+        std::cout << e.what() << std::endl;
+        std::cout <<"throwing correctly\n";
+    }
+    std::cout << i <<"\n";
+	
+    // Diverse saker att testa
+    //e[5] = 3;              // fel: (kompilerar ej) tilldelning till const
+    std::cout<< b[3]<<"\n";
+    b = b;                 // hmm: se till att inte minnet som skall behållas frigörs
+    std::cout<< b[3]<<"\n";	
+    std::cout<<"bluh\n"; //FLYTTAR INTE ORDENLIGT... :/
+    UIntVector o,l;
+    l = std::move(o);
+
+    return 0;
+}

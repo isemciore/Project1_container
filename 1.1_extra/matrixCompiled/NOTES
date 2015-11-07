@@ -1,0 +1,37 @@
+MATRIX 1 - FAILS AT MATRIX ADDITION
+
+MATRIX 3 - SEGFAULTS AT BRACKET ASSIGN VALUE
+
+MATRIX 2 - 
+
+MATRIX 4 - SEGFAULTS WHEN ROWS > COLS; AND ASSIGN VALUE TO OUTSIDE SQUARE
+
+MATRIX 5 - FAILS AT MATRIX MULTIPLICATION
+
+MATRIX 6 - FAILS AT MINUS MATRIX
+
+MATRIX 7 - FAILS SCL ADDITION CAUSE SIZE ERROR
+
+MATRIX 8 - MATRIX ROW 2 COL 3  index[1][2] error AFTER  SCL MULTIPLICATION
+
+MATRIX 9 - MEMORY LEAK
+
+
+
+
+Improvement:
+Block out of range assignment/recieve value.
+
+operator-(), can insted scalar multiply -1
+Saves some rows, but becomes more expensive computational wise. From bitflipping last bit, 
+have to multiply by *-1 instead. 
+
+operator-(Matrix) can use operator-(), and then use operator+(Matrix).
+Little less code, but as it is only operation+- difference the impact should be small.
+
+
+Avoid MatrixRow innerclass, by storing matrix data in vector and translate coordinate via (i+n*j) = k;
+(Larger continous heap/stack memory). perhaps faster access
+
+
+Implement oeprator-(int), and let it use operator+(int)
