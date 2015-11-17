@@ -1,0 +1,21 @@
+#include <cxxtest/TestSuite.h>
+#include "boolVector.hpp"
+#include <iostream>
+#include <sstream>
+
+class vector_cxx_test : public CxxTest::TestSuite {
+    int a,b,c,d,e,f;
+
+    void setUp(){
+        
+    }
+
+
+public:
+    void test_dummy(){
+        std::cout << "Hello world!\n";
+    }
+ 
+
+};
+	

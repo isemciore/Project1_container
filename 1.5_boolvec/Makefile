@@ -1,0 +1,18 @@
+CC = g++
+rCC = clang++
+FLAGS = -std=c++11 -g -Wall
+
+
+main.out: vector_cxx_test.cpp boolVector.o boolVector.hpp
+	./cxxtest/cxxtestgen.pl --error-printer -o tests.cpp vector_cxx_test.cpp
+	$(CC) $(FLAGS) -o main.out -I cxxtest/ tests.cpp boolVector.o
+
+
+boolVector.o: boolVector.hpp
+	$(CC) $(FLAGS) -c boolVector.cpp -o boolVector.o
+
+clean:
+	rm -f main.out 
+	rm -f boolVector.o
+	rm -f tests.cpp && clear
+
